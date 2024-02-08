@@ -61,7 +61,7 @@ Provide visuals of your app's screens. You can use tools like Figma or pictures 
 ### Data
 
 Describe your data and the relationships between them. You can show this visually using diagrams, or write it out. 
-
+![Database Design](/public/images/db.png)
 ### Endpoints
 --------------------------------------------------------------------
 GET /products
