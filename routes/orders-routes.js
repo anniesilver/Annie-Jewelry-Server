@@ -1,10 +1,8 @@
-
-
 const router = require('express').Router();
-const userController = require('../controllers/userController');
+const orderController = require('../controllers/orderController');
 
 
-router.route('/').get(userController.index);
+router.route('/').get(orderController.orderList);
 
 
 module.exports = router;

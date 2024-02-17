@@ -19,4 +19,9 @@ module.exports = [
         name: "Bracelet",
         parent_id: 0,
     },
+    {
+        id: 5,
+        name: "ring",
+        parent_id: 0,
+    },
 ];
