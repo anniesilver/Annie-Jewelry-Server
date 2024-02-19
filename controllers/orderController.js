@@ -33,7 +33,7 @@ const newOrder = async (req, res) => {
     const { jsonResponse, httpStatusCode } = await createOrder(orderTotal);
     console.log("status from Paypal server",httpStatusCode);
     console.log("response data from Paypal server",jsonResponse);
-   // created paypal order id successfully, insert order into our order table now.
+    // if  paypal order id created successfully, insert order into our order table now.
     if(httpStatusCode === 201){
       const order = {
         user_id :user_id,    
@@ -45,12 +45,7 @@ const newOrder = async (req, res) => {
         order_number:0,
         order_time:knex.raw('CURRENT_TIMESTAMP')
       }    
-      //console.log(order);
       try {     
-        const queryBuilder = knex('orders').insert(order);
-        // Log the generated SQL statement
-        const sqlStatement = queryBuilder.toString();
-        console.log(sqlStatement);
         const data = await knex('orders')
         .insert(order); 
       } catch(err) {
