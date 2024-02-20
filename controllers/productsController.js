@@ -1,4 +1,5 @@
 const knex = require('knex')(require('../knexfile'));
+
 const productList = async (_req, res) => {
     try {
       const data = await knex.from('products')

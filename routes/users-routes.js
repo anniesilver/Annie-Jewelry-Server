@@ -9,4 +9,5 @@ router.route('/signup').post(userController.userSignup);
 
 router.route('/profile').get(userController.authorize, userController.userProfile);
 
+
 module.exports = router;

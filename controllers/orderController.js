@@ -1,4 +1,5 @@
 const knex = require('knex')(require('../knexfile'));
+
 require('dotenv').config();
 const base = "https://api-m.sandbox.paypal.com";
 const { PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET} = process.env;
@@ -12,17 +13,21 @@ const orderList = async (_req, res) => {
       res.status(400).send(`Error retrieving Users: ${err}`)
     }
 }
+
 const newOrder = async (req, res) => {
+  const user_id = req.decode.user_id;
+
   try {
     // use the cart information passed from the front-end to calculate the order amount detals
-    const {user_id, cart} = req.body;
-    console.log(user_id,cart);
+    const cartList = req.body;
+    console.log("===============");
+    console.log(cartList);
     // const {name,title,channel,duration,image,video,description}=req.body;
-    const subTotal=parseFloat(cart.reduce((total, currentItem) => total + (currentItem.qty*currentItem.price), 0)).toFixed(2);
+    const subTotal=parseFloat(cartList.reduce((total, currentItem) => total + (currentItem.qty*currentItem.price), 0)).toFixed(2);
     const tax = parseFloat(subTotal*0.13).toFixed(2);
     const shippingFee = parseFloat(subTotal>100 ? 0 : 10).toFixed(2);
     const orderTotal = parseFloat(subTotal + subTotal*0.13 + shippingFee).toFixed(2);
-    const productList= cart.map ( p=>{
+    const productList= cartList.map ( p=>{
       return{
         product_id:p.id,
         qty:p.qty,
@@ -64,7 +69,7 @@ const confirmOrder = async (req, res) => {
   try {
     //this order ID is the order ID created from Paypal.
     const { orderID } = req.params;
-    console.log("the order id created just now:",orderID);
+    console.log("the PayPal order id created just now:",orderID);
     const { jsonResponse, httpStatusCode } = await captureOrder(orderID);
     console.log("status from Paypal server",httpStatusCode);
     console.log("response data from Paypal server",jsonResponse);

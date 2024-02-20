@@ -7,6 +7,7 @@ const jsonSecretKey = "0280190174cd2f36c48b3f431d1502fe1f54355751c75d2aac28e55f0
 
 function authorize(req,res,next){
   const token = getToken(req);
+  console.log("in authorize: we got token from HTTP header:",token);
   if (token) {
     console.log('Auth Token:', token);
     if (jwt.verify(token, jsonSecretKey)) {
@@ -31,7 +32,7 @@ function getToken(req) {
   }
 }
 
-const users = {};
+
 
 const userSignup = async (req, res) => {
   const { email, firstname,lastname, password } = req.body;
@@ -94,9 +95,29 @@ const userLogin = async (req, res) => {
     });
   }
 }
+
+
 async function userProfile(req, res){
-  res.json(req.decode);
+  const user_id = req.decode.user_id;
+  console.log("trying get user profile ,id=",user_id)
+  try {
+    const userFound = await knex("users")
+      .where({ id: user_id });  
+    if (userFound.length === 0) {
+      return res.status(404).json({
+        message: `user with ID ${req.params.user_ID} not found` 
+      });
+    }
+    console.log("found user profile:",userFound[0]);
+    res.json(userFound[0]);
+  } catch (error) {
+    res.status(500).json({
+      message: `Unable to retrieve product data for product with ID ${req.params.id}`,
+    });
+  }
 }
+
+
 
 module.exports = {
   userLogin,
