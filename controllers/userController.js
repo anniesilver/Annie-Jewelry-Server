@@ -49,32 +49,39 @@ const userSignup = async (req, res) => {
         postal:"L6J7C4"
       })    
     }
-    console.log(user);
-    const data = await knex('users')
+    const user_id = await knex('users')
     .insert(user); 
+    console.log("return value from db for insert new user", user_id);
+    const myToken = jwt.sign(
+      { 
+        firstname: user.firstname,
+        user_id: user_id[0],
+      }, jsonSecretKey);
+
+    res.json({ success: "true", token: myToken });
+
   } catch(err) {
     console.error(`Error insert in new USER info to db: ${err}`)
     res.status(500).json({ error: "Failed WHEN signup." });
   } 
-  res.json({ success: "true" });
+  res.json();
 }
 
 const userLogin = async (req, res) => {
   const { email, password } = req.body;
   try{
-    console.log(`user ${email} trying to login with password： ${password}`)
+
     const user = await knex('users')
     .where({ email: email }).first();  
-    console.log(typeof(user.password));
-    console.log(typeof(password));
+
     if (user && user.password === password) {
-      console.log('Found user:', user);
+
       const myToken = jwt.sign(
         { 
           firstname: user.firstname,
           user_id: user.id,
         }, jsonSecretKey);
-      console.log(myToken);
+
       res.json({ token: myToken });
     } 
     else {
@@ -99,7 +106,7 @@ const userLogin = async (req, res) => {
 
 async function userProfile(req, res){
   const user_id = req.decode.user_id;
-  console.log("trying get user profile ,id=",user_id)
+
   try {
     const userFound = await knex("users")
       .where({ id: user_id });  
@@ -108,7 +115,7 @@ async function userProfile(req, res){
         message: `user with ID ${req.params.user_ID} not found` 
       });
     }
-    console.log("found user profile:",userFound[0]);
+
     res.json(userFound[0]);
   } catch (error) {
     res.status(500).json({
