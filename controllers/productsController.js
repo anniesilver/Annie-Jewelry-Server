@@ -54,9 +54,6 @@ const productBySold = async (req, res) => {
       });
     }
  }
- const productByCategory = async (req,res) =>{
-
- }
 
 const productByCollection = async (req,res) =>{
   try {
@@ -96,7 +93,6 @@ module.exports = {
     productById,
     productComments,
     productBySold,
-    productByCategory,
     productByCollection
   };
   

@@ -22,7 +22,6 @@ const newOrder = async (req, res) => {
     const cartList = req.body;
     console.log("===============");
     console.log(cartList);
-    // const {name,title,channel,duration,image,video,description}=req.body;
     const subTotal=parseFloat(cartList.reduce((total, currentItem) => total + (currentItem.qty*currentItem.price), 0)).toFixed(2);
     const tax = parseFloat(subTotal*0.13).toFixed(2);
     const shippingFee = parseFloat(subTotal>100 ? 0 : 10).toFixed(2);
@@ -69,10 +68,7 @@ const confirmOrder = async (req, res) => {
   try {
     //this order ID is the order ID created from Paypal.
     const { orderID } = req.params;
-    console.log("the PayPal order id created just now:",orderID);
     const { jsonResponse, httpStatusCode } = await captureOrder(orderID);
-    console.log("status from Paypal server",httpStatusCode);
-    console.log("response data from Paypal server",jsonResponse);
     res.status(httpStatusCode).json(jsonResponse);
   } catch (error) {
     console.error("Failed to capture order:", error);
@@ -183,8 +179,6 @@ async function handleResponse(response) {
     throw new Error(errorMessage);
   }
 }
-
-
 
 module.exports = {
     orderList,
