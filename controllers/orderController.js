@@ -19,13 +19,16 @@ const newOrder = async (req, res) => {
 
   try {
     // use the cart information passed from the front-end to calculate the order amount detals
+    
     const cartList = req.body;
-    console.log("===============");
-    console.log(cartList);
-    const subTotal=parseFloat(cartList.reduce((total, currentItem) => total + (currentItem.qty*currentItem.price), 0)).toFixed(2);
-    const tax = parseFloat(subTotal*0.13).toFixed(2);
-    const shippingFee = parseFloat(subTotal>100 ? 0 : 10).toFixed(2);
-    const orderTotal = parseFloat(subTotal + subTotal*0.13 + shippingFee).toFixed(2);
+    //const subTotal=parseFloat(cartList.reduce((total, currentItem) => total + (currentItem.qty*currentItem.price), 0)).toFixed(2);
+    // const tax = parseFloat(subTotal*0.13).toFixed(2);
+ 
+    const subTotal=cartList.reduce((total, currentItem) => total + (currentItem.qty*currentItem.price), 0);
+    const shippingFee = subTotal>100 ? 0 : 10;
+    const orderTotal = parseFloat((subTotal + subTotal*0.13 + shippingFee)).toFixed(2);
+    console.log("subtotal：",subTotal);
+    console.log("orderTotal",orderTotal);
     const productList= cartList.map ( p=>{
       return{
         product_id:p.id,
@@ -35,8 +38,6 @@ const newOrder = async (req, res) => {
     });    
     
     const { jsonResponse, httpStatusCode } = await createOrder(orderTotal);
-    console.log("status from Paypal server",httpStatusCode);
-    console.log("response data from Paypal server",jsonResponse);
     // if  paypal order id created successfully, insert order into our order table now.
     if(httpStatusCode === 201){
       const order = {
@@ -107,12 +108,6 @@ const generateAccessToken = async () => {
  * Create an order to start the transaction.
  */
 const createOrder = async (total) => {
-  // use the cart information passed from the front-end to calculate the purchase unit details
-  console.log(
-    "total amount passed from the frontend createOrder() callback:",
-    total,
-  );
-
   const accessToken = await generateAccessToken();
   const url = `${base}/v2/checkout/orders`;
   const payload = {

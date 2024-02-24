@@ -7,14 +7,9 @@ const jsonSecretKey = "0280190174cd2f36c48b3f431d1502fe1f54355751c75d2aac28e55f0
 
 function authorize(req,res,next){
   const token = getToken(req);
-  console.log("in authorize: we got token from HTTP header:",token);
   if (token) {
-    console.log('Auth Token:', token);
     if (jwt.verify(token, jsonSecretKey)) {
-      // Decode the token to pass along to end-points that may need
-      // access to data stored in the token.
       req.decode = jwt.decode(token);
-      console.log("decoded data", req.decode);
       next();
     } else {
       res.status(403).json({ error: "Not Authorized." });
@@ -51,7 +46,6 @@ const userSignup = async (req, res) => {
     }
     const user_id = await knex('users')
     .insert(user); 
-    console.log("return value from db for insert new user", user_id);
     const myToken = jwt.sign(
       { 
         firstname: user.firstname,
