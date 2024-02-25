@@ -2,7 +2,7 @@ module.exports = [
     {
         id: 1,        
         email: "anniesilver@gmail.com",
-        password:"abcd123",
+        password:"111111",
         firstname: "Annie",
         lastname: "Yang",
         contact:{
@@ -14,7 +14,7 @@ module.exports = [
     {
         id: 2,        
         email: "yangyushan@yahoo.com",
-        password:"abcd123",
+        password:"111111",
         firstname: "Jessie",
         lastname: "Wilson",
         contact:{
