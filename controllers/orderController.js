@@ -4,31 +4,16 @@ require('dotenv').config();
 const base = "https://api-m.sandbox.paypal.com";
 const { PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET} = process.env;
 
-const orderList = async (_req, res) => {
-    try {
-      const data = await knex.from('orders')
-      .select('id','user_id');            
-      res.status(200).json(data);
-    } catch(err) {
-      res.status(400).send(`Error retrieving Users: ${err}`)
-    }
-}
 
 const newOrder = async (req, res) => {
   const user_id = req.decode.user_id;
 
-  try {
-    // use the cart information passed from the front-end to calculate the order amount detals
-    
-    const cartList = req.body;
-    //const subTotal=parseFloat(cartList.reduce((total, currentItem) => total + (currentItem.qty*currentItem.price), 0)).toFixed(2);
-    // const tax = parseFloat(subTotal*0.13).toFixed(2);
- 
+  try {    
+    const cartList = req.body; 
     const subTotal=cartList.reduce((total, currentItem) => total + (currentItem.qty*currentItem.price), 0);
     const shippingFee = subTotal>100 ? 0 : 10;
     const orderTotal = parseFloat((subTotal + subTotal*0.13 + shippingFee)).toFixed(2);
-    console.log("subtotal：",subTotal);
-    console.log("orderTotal",orderTotal);
+
     const productList= cartList.map ( p=>{
       return{
         product_id:p.id,
@@ -176,7 +161,6 @@ async function handleResponse(response) {
 }
 
 module.exports = {
-    orderList,
     newOrder,
     confirmOrder
 }
