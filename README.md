@@ -1,14 +1,17 @@
-setting up server:
-
-setting up database
+# Instruction of Setting up Annie Jewelry Store Server
+## setting up database
 1. start terminal as root/administrator 
 2. go to annie-jewelry-server root folder
 3. connect to mysql server
 4. create database annie_jewels_store;
 5. source ./annie_jewels_store.sql
 
-seeding sample data
-6. npm run seed
+## install depency packages and setup enviroment
+6. npm install
+7. create .env file from .env.example at annie-jewelry-server root foler
 
-running server in demon
-7. npm start
+## seeding sample data
+8. npm run seed
+
+## run annie jewelry server in demon
+9. npm start
